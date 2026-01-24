@@ -109,39 +109,39 @@ export default function ResumePage() {
   };
 
   // Auto-save every 5 seconds when data changes
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      if (resume && user && process.env.NEXT_PUBLIC_SUPABASE_URL) {
-        try {
-          const resumeData = {
-            id: resume.id,
-            title: resume.personal.fullName || 'Untitled Resume',
-            full_name: resume.personal.fullName,
-            email: resume.personal.email,
-            phone: resume.personal.phone,
-            location: resume.personal.location,
-            summary: resume.summary,
-            skills: resume.skillGroups,
-            experience: resume.experience,
-            projects: resume.projects,
-            education: resume.education,
-            achievements: resume.achievements,
-          };
+  // useEffect(() => {
+  //   const interval = setInterval(async () => {
+  //     if (resume && user && process.env.NEXT_PUBLIC_SUPABASE_URL) {
+  //       try {
+  //         const resumeData = {
+  //           id: resume.id,
+  //           title: resume.personal.fullName || 'Untitled Resume',
+  //           full_name: resume.personal.fullName,
+  //           email: resume.personal.email,
+  //           phone: resume.personal.phone,
+  //           location: resume.personal.location,
+  //           summary: resume.summary,
+  //           skills: resume.skillGroups,
+  //           experience: resume.experience,
+  //           projects: resume.projects,
+  //           education: resume.education,
+  //           achievements: resume.achievements,
+  //         };
 
-          const existingResume = await resumeService.getResume(resume.id);
-          if (existingResume) {
-            await resumeService.updateResume(resume.id, resumeData);
-          } else {
-            await resumeService.createResume(user.userId, resumeData);
-          }
-        } catch (err) {
-          console.error('Failed to sync resume to database:', err);
-        }
-      }
-    }, 5000);
+  //         const existingResume = await resumeService.getResume(resume.id);
+  //         if (existingResume) {
+  //           await resumeService.updateResume(resume.id, resumeData);
+  //         } else {
+  //           await resumeService.createResume(user.userId, resumeData);
+  //         }
+  //       } catch (err) {
+  //         console.error('Failed to sync resume to database:', err);
+  //       }
+  //     }
+  //   }, 5000);
 
-    return () => clearInterval(interval);
-  }, [resume, user]);
+  //   return () => clearInterval(interval);
+  // }, [resume, user]);
 
   if (!mounted || !resume) {
     return (
