@@ -1,29 +1,33 @@
-// import { useResumeStore } from './resume-store'; // Import the useResumeStore
-
 export interface ResumeData {
   id?: string;
   title: string;
+  // Personal Info
   full_name?: string;
   email?: string;
   phone?: string;
   location?: string;
-  website?: string;
+  portfolio?: string;
   linkedin?: string;
   github?: string;
+  // Summary
   summary?: string;
-  skills?: Array<{ category: string; skills: string[] }>;
+  // Skills
+  skills?: Array<{ 
+    id: string;
+    category: string;
+    skills: Array<{ id: string; name: string; }> }>;
   experience?: Array<{
     id: string;
     company: string;
-    position: string;
+    role: string;
     startDate: string;
     endDate: string;
-    isCurrent: boolean;
-    description: string[];
+    currentlyWorking: boolean;
+    bullets: Array<{ id: string; text: string }>;
   }>;
   projects?: Array<{
     id: string;
-    name: string;
+    title: string;
     description: string;
     technologies: string[];
     link?: string;
@@ -33,9 +37,11 @@ export interface ResumeData {
     school: string;
     degree: string;
     field: string;
-    graduationDate: string;
+    graduationYear: string;
   }>;
   achievements?: string[];
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 const API_BASE = '/api/resumes';
