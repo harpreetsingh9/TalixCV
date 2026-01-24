@@ -1,11 +1,16 @@
-'use client'
+'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authUtils } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
-import { CircleUser, LogOut } from 'lucide-react';
+import { CircleUser, Download, LogOut } from 'lucide-react';
 
-export default function Header() {
+type HeaderProps = {
+  handleSave?: () => void;
+  isEditor?: boolean;
+};
+
+export default function Header({ handleSave, isEditor = false }: HeaderProps) {
   const router = useRouter();
   const [user, setUser] = useState(authUtils.getCurrentUser());
 
@@ -14,7 +19,7 @@ export default function Header() {
     const currentUser = authUtils.getCurrentUser();
     setUser(currentUser);
   }, []);
-  
+
   const handleLogout = () => {
     authUtils.logout();
     router.push('/');
@@ -27,9 +32,14 @@ export default function Header() {
             Resume Builder
           </h1>
         </div>
-        <span className="text-sm text-gray-500">
-              {'Untitled Resume'}
-            </span>
+        {isEditor && (
+          <>
+            <span className="text-sm text-gray-500">{'Untitled Resume'}</span>
+            <Button onClick={handleSave} className="bg-black text-white">
+              Save <Download />
+            </Button>
+          </>
+        )}
         <div className="flex items-center gap-4">
           <span className="text-sm text-gray-600 flex items-center">
             <CircleUser className="mr-1" />

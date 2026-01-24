@@ -153,7 +153,7 @@ export default function ResumePage() {
 
   return (
     <div className="flex flex-col bg-white text-black min-h-screen">
-      <Header />
+      <Header handleSave={saveResume} isEditor={true} />
 
       {isMobile ? (
         <MobileLayout resume={resume} setResume={setResume} />
