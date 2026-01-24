@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS resumes (
   email TEXT,
   phone TEXT,
   location TEXT,
-  website TEXT,
+  portfolio TEXT,
   linkedin TEXT,
   github TEXT,
   
