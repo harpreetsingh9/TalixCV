@@ -48,16 +48,16 @@ export async function POST(request: NextRequest) {
     }
 
     // First, ensure user exists
-    const { data: userData, error: userError } = await supabase
-      .from('users')
-      .upsert({
-        user_id: userId,
-        name: resumeData.full_name || 'User',
-      });
+    // const { data: userData, error: userError } = await supabase
+    //   .from('users')
+    //   .upsert({
+    //     user_id: userId,
+    //     name: resumeData.full_name || 'User',
+    //   });
 
-    if (userError) {
-      console.error('User upsert error:', userError);
-    }
+    // if (userError) {
+    //   console.error('User upsert error:', userError);
+    // }
 
     // Create resume
     const { data, error } = await supabase

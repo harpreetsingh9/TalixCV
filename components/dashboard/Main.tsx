@@ -7,25 +7,26 @@ import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { resumeService } from '@/lib/services/resume-service';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
+import { Resume } from '@/types/resume';
 
-interface Resume {
-  id: string;
-  createdAt: number;
-  updatedAt: number;
-  personal: {
-    fullName: string;
-    email: string;
-    phone: string;
-    location: string;
-  };
-  summary: string;
-  skillGroups: any[];
-  experience: any[];
-  projects: any[];
-  education: any[];
-  achievements: string[];
-}
+// interface Resume {
+//   id: string;
+//   createdAt: number;
+//   updatedAt: number;
+//   personal: {
+//     fullName: string;
+//     email: string;
+//     phone: string;
+//     location: string;
+//   };
+//   summary: string;
+//   skillGroups: any[];
+//   experience: any[];
+//   projects: any[];
+//   education: any[];
+//   achievements: string[];
+// }
 
 export default function Main() {
   const router = useRouter();
@@ -81,38 +82,38 @@ export default function Main() {
   }
 
 	const handleCreateResume = async () => {
-    const newResumeId = uuidv4();
-    const newResume: Resume = {
-      id: newResumeId,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      personal: {
-        fullName: '',
-        email: '',
-        phone: '',
-        location: '',
-      },
-      summary: '',
-      skillGroups: [],
-      experience: [],
-      projects: [],
-      education: [],
-      achievements: [],
-    };
+    // const newResumeId = uuidv4();
+    // const newResume: Resume = {
+    //   id: newResumeId,
+    //   createdAt: Date.now(),
+    //   updatedAt: Date.now(),
+    //   personal: {
+    //     fullName: '',
+    //     email: '',
+    //     phone: '',
+    //     location: '',
+    //   },
+    //   summary: '',
+    //   skillGroups: [],
+    //   experience: [],
+    //   projects: [],
+    //   education: [],
+    //   achievements: [],
+    // };
 
     if (user && process.env.NEXT_PUBLIC_SUPABASE_URL) {
       try {
-        await resumeService.createResume(user.userId, {
-          id: newResumeId,
+        const created = await resumeService.createResume(user.userId, {
+          // id: newResumeId,
           title: 'Untitled Resume',
-          full_name: '',
+          // full_name: '',
         });
+        router.push(`/app/resume/${created?.id}/edit`);
       } catch (err) {
         console.error('Failed to create resume in database:', err);
       }
     }
 
-    router.push(`/app/resume/${newResumeId}/edit`);
   };
 
 	const handleDeleteResume = async (id: string) => {
