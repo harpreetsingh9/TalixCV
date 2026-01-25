@@ -17,11 +17,38 @@ export default function ResumePage() {
   const [mounted, setMounted] = useState(false);
   const isMobile = useMediaQuery('(max-width: 1024px)');
   const user = authUtils.getCurrentUser();
-  const currentResume = resume; // Declare currentResume variable
-  const saveResume = () => {
-    // Placeholder for saveResume function
-    console.log('Save resume logic here');
-  };
+
+  // const currentResume = resume; // Declare currentResume variable
+
+const handleSave = async () => {
+  if (!resume || !user) return;
+
+  try {
+    const payload = {
+      title: resume.personal.fullName || 'Untitled Resume',
+      full_name: resume.personal.fullName,
+      email: resume.personal.email,
+      phone: resume.personal.phone,
+      location: resume.personal.location,
+      linkedin: resume.personal.linkedIn,
+      portfolio: resume.personal.portfolio,
+      summary: resume.summary,
+      skills: resume.skillGroups,
+      experience: resume.experience,
+      projects: resume.projects,
+      education: resume.education,
+      achievements: resume.achievements,
+    };
+
+    await resumeService.updateResume(resume.id, payload);
+
+    alert('Resume saved successfully');
+  } catch (err) {
+    console.error(err);
+    alert('Failed to save resume');
+  }
+};
+
 
   useEffect(() => {
     setMounted(true);
@@ -153,7 +180,7 @@ export default function ResumePage() {
 
   return (
     <div className="flex flex-col bg-white text-black min-h-screen">
-      <Header handleSave={saveResume} isEditor={true} />
+      <Header handleSave={handleSave} isEditor={true} />
 
       {isMobile ? (
         <MobileLayout resume={resume} setResume={setResume} />
