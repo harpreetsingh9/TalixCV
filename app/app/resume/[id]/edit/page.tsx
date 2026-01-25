@@ -9,6 +9,8 @@ import type { Resume } from '@/types/resume';
 import Header from '@/components/dashboard/Header';
 import MobileLayout from '@/components/resume/MobileLayout';
 import DesktopLayout from '@/components/resume/DesktopLayout';
+import { ResumePDF } from '@/components/resume/ResumePDF';
+import { pdf } from '@react-pdf/renderer';
 
 export default function ResumePage() {
   const params = useParams();
@@ -20,35 +22,44 @@ export default function ResumePage() {
 
   // const currentResume = resume; // Declare currentResume variable
 
-const handleSave = async () => {
-  if (!resume || !user) return;
+  const handleSave = async () => {
+    if (!resume || !user) return;
 
-  try {
-    const payload = {
-      title: resume.personal.fullName || 'Untitled Resume',
-      full_name: resume.personal.fullName,
-      email: resume.personal.email,
-      phone: resume.personal.phone,
-      location: resume.personal.location,
-      linkedin: resume.personal.linkedIn,
-      portfolio: resume.personal.portfolio,
-      summary: resume.summary,
-      skills: resume.skillGroups,
-      experience: resume.experience,
-      projects: resume.projects,
-      education: resume.education,
-      achievements: resume.achievements,
-    };
+    try {
+      const payload = {
+        title: resume.personal.fullName || 'Untitled Resume',
+        full_name: resume.personal.fullName,
+        email: resume.personal.email,
+        phone: resume.personal.phone,
+        location: resume.personal.location,
+        linkedin: resume.personal.linkedIn,
+        portfolio: resume.personal.portfolio,
+        summary: resume.summary,
+        skills: resume.skillGroups,
+        experience: resume.experience,
+        projects: resume.projects,
+        education: resume.education,
+        achievements: resume.achievements,
+      };
 
-    await resumeService.updateResume(resume.id, payload);
+      await resumeService.updateResume(resume.id, payload);
 
-    alert('Resume saved successfully');
-  } catch (err) {
-    console.error(err);
-    alert('Failed to save resume');
-  }
-};
-
+      //create blob and trigger download
+      const blob = await pdf(ResumePDF({ resume })).toBlob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `resume.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      //cleanup
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to save resume');
+    }
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -134,41 +145,6 @@ const handleSave = async () => {
       setResume(emptyResume);
     }
   };
-
-  // Auto-save every 5 seconds when data changes
-  // useEffect(() => {
-  //   const interval = setInterval(async () => {
-  //     if (resume && user && process.env.NEXT_PUBLIC_SUPABASE_URL) {
-  //       try {
-  //         const resumeData = {
-  //           id: resume.id,
-  //           title: resume.personal.fullName || 'Untitled Resume',
-  //           full_name: resume.personal.fullName,
-  //           email: resume.personal.email,
-  //           phone: resume.personal.phone,
-  //           location: resume.personal.location,
-  //           summary: resume.summary,
-  //           skills: resume.skillGroups,
-  //           experience: resume.experience,
-  //           projects: resume.projects,
-  //           education: resume.education,
-  //           achievements: resume.achievements,
-  //         };
-
-  //         const existingResume = await resumeService.getResume(resume.id);
-  //         if (existingResume) {
-  //           await resumeService.updateResume(resume.id, resumeData);
-  //         } else {
-  //           await resumeService.createResume(user.userId, resumeData);
-  //         }
-  //       } catch (err) {
-  //         console.error('Failed to sync resume to database:', err);
-  //       }
-  //     }
-  //   }, 5000);
-
-  //   return () => clearInterval(interval);
-  // }, [resume, user]);
 
   if (!mounted || !resume) {
     return (

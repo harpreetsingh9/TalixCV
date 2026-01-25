@@ -7,26 +7,7 @@ import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { resumeService } from '@/lib/services/resume-service';
-// import { v4 as uuidv4 } from 'uuid';
 import { Resume } from '@/types/resume';
-
-// interface Resume {
-//   id: string;
-//   createdAt: number;
-//   updatedAt: number;
-//   personal: {
-//     fullName: string;
-//     email: string;
-//     phone: string;
-//     location: string;
-//   };
-//   summary: string;
-//   skillGroups: any[];
-//   experience: any[];
-//   projects: any[];
-//   education: any[];
-//   achievements: string[];
-// }
 
 export default function Main() {
   const router = useRouter();

@@ -6,7 +6,6 @@ import { authUtils } from '@/lib/auth';
 
 import Header from '@/components/dashboard/Header';
 import Main from '@/components/dashboard/Main';
-// import { createResume, useResumeStore, loadResume, deleteResume } from '@/lib/resume-store';
 
 export default function DashboardPage() {
   // const router = useRouter();
