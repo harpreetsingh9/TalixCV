@@ -1,7 +1,5 @@
 'use client';
-
-import type { Resume } from '@/app/app/resume/[id]/edit/page';
-
+import { Resume } from "@/types/resume";
 interface ResumePreviewProps {
   resume: Resume;
 }
