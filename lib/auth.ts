@@ -41,11 +41,11 @@ export const authUtils = {
       return { user: null, error: 'Sign up failed' };
     }
 
-    //create user record in users table
+    //create user record in profiles table
     const { error: dbError } = await supabase
-      .from('users')
+      .from('profiles')
       .insert({
-        user_id: data.user.id,
+        id: data.user.id,
         name: name,
         email: email,
       });
