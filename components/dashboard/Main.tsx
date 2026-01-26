@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { authUtils } from '@/lib/auth';
+import { authUtils, type AuthUser } from '@/lib/auth';
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -11,20 +11,21 @@ import { Resume } from '@/types/resume';
 
 export default function Main() {
   const router = useRouter();
-  const [user, setUser] = useState(authUtils.getCurrentUser());
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [resumes, setResumes] = useState<Resume[]>([]);
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const currentUser = authUtils.getCurrentUser();
-    setUser(currentUser);
+    
+    const loadData = async () => {
+      const currentUser = await authUtils.getCurrentUser();
+      setUser(currentUser);
 
-    const loadResumes = async () => {
-      setLoading(true);
-      try {
-        if (currentUser && process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      if (currentUser && process.env.NEXT_PUBLIC_SUPABASE_URL) {
+        setLoading(true);
+        try {
           const dbResumes = await resumeService.getResumes(currentUser.userId);
           if (dbResumes.length > 0) {
             setResumes(
@@ -47,57 +48,35 @@ export default function Main() {
               }))
             );
           }
+        } catch (err) {
+          console.error('Failed to load resumes:', err);
+        } finally {
+          setLoading(false);
         }
-      } catch (err) {
-        console.error('Failed to load resumes:', err);
-      } finally {
-        setLoading(false);
       }
     };
 
-    loadResumes();
+    loadData();
   }, []);
 
-	  if (!mounted || !user) {
+  if (!mounted || !user) {
     return null;
   }
 
-	const handleCreateResume = async () => {
-    // const newResumeId = uuidv4();
-    // const newResume: Resume = {
-    //   id: newResumeId,
-    //   createdAt: Date.now(),
-    //   updatedAt: Date.now(),
-    //   personal: {
-    //     fullName: '',
-    //     email: '',
-    //     phone: '',
-    //     location: '',
-    //   },
-    //   summary: '',
-    //   skillGroups: [],
-    //   experience: [],
-    //   projects: [],
-    //   education: [],
-    //   achievements: [],
-    // };
-
+  const handleCreateResume = async () => {
     if (user && process.env.NEXT_PUBLIC_SUPABASE_URL) {
       try {
         const created = await resumeService.createResume(user.userId, {
-          // id: newResumeId,
           title: 'Untitled Resume',
-          // full_name: '',
         });
         router.push(`/app/resume/${created?.id}/edit`);
       } catch (err) {
         console.error('Failed to create resume in database:', err);
       }
     }
-
   };
 
-	const handleDeleteResume = async (id: string) => {
+  const handleDeleteResume = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this resume?')) {
       try {
         if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
@@ -109,10 +88,6 @@ export default function Main() {
       }
     }
   };
-
-  // const handleEditResume = (id: string) => {
-  //   router.push(`/app/resume/${id}/edit`);
-  // };
 
   if (loading) {
     return (
