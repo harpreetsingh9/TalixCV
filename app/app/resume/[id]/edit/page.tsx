@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { resumeService } from '@/lib/services/resume-service';
-import { authUtils } from '@/lib/auth';
+import { authUtils, type AuthUser } from '@/lib/auth';
 import { useMediaQuery } from '@/hooks/use-mobile';
 import type { Resume } from '@/types/resume';
 import Header from '@/components/dashboard/Header';
@@ -17,10 +17,8 @@ export default function ResumePage() {
   const id = params?.id as string;
   const [resume, setResume] = useState<Resume | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const isMobile = useMediaQuery('(max-width: 1024px)');
-  const user = authUtils.getCurrentUser();
-
-  // const currentResume = resume; // Declare currentResume variable
 
   const handleSave = async () => {
     if (!resume || !user) return;
@@ -44,15 +42,16 @@ export default function ResumePage() {
 
       await resumeService.updateResume(resume.id, payload);
 
-      //create blob and trigger download
+      // Create blob and trigger download
       const blob = await pdf(ResumePDF({ resume })).toBlob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `resume.pdf`;
+      a.download = `${resume.personal.fullName?.replace(/\s+/g, '_') || 'resume'}.pdf`;
       document.body.appendChild(a);
       a.click();
-      //cleanup
+      
+      // Cleanup
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
     } catch (err) {
@@ -63,9 +62,17 @@ export default function ResumePage() {
 
   useEffect(() => {
     setMounted(true);
-    if (id) {
-      loadResume(id);
-    }
+    
+    const loadData = async () => {
+      const currentUser = await authUtils.getCurrentUser();
+      setUser(currentUser);
+      
+      if (id) {
+        await loadResume(id);
+      }
+    };
+    
+    loadData();
   }, [id]);
 
   const loadResume = async (resumeId: string) => {
@@ -97,7 +104,6 @@ export default function ResumePage() {
             achievements: dbResume.achievements || [],
           });
         } else {
-          // Create empty resume if not found
           const emptyResume: Resume = {
             id: resumeId,
             createdAt: Date.now(),
@@ -129,7 +135,6 @@ export default function ResumePage() {
         setResume(emptyResume);
       }
     } else {
-      // No Supabase, use empty resume
       const emptyResume: Resume = {
         id: resumeId,
         createdAt: Date.now(),

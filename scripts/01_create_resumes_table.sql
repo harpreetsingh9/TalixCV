@@ -1,17 +1,27 @@
--- Create users table
-CREATE TABLE IF NOT EXISTS users (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id TEXT UNIQUE NOT NULL,
-  name TEXT NOT NULL,
+-- profiles table
+CREATE TABLE IF NOT EXISTS profiles (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  name TEXT,
   email TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Create users table
+-- CREATE TABLE IF NOT EXISTS users (
+--   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+--   user_id TEXT UNIQUE NOT NULL,
+--   name TEXT NOT NULL,
+--   email TEXT,
+--   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+--   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- );
+
 -- Create resumes table
 CREATE TABLE IF NOT EXISTS resumes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id TEXT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+  -- correct user reference
+  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
   
   -- Personal Info
@@ -62,5 +72,12 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER update_resumes_updated_at BEFORE UPDATE ON resumes
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
+CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON profiles
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+ALTER TABLE resumes ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage their own resumes"
+ON resumes
+FOR ALL
+USING (auth.uid() = user_id);

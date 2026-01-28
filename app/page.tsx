@@ -1,13 +1,6 @@
-// import { redirect } from 'next/navigation';
-// import { authUtils } from '@/lib/auth';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 export default function LandingPage() {
-  // if(authUtils.isAuthenticated()){
-  //   redirect('/app/dashboard');
-  // }
-
   return (
     <div className="flex flex-col min-h-screen bg-white text-black">
       {/* Header */}
@@ -16,13 +9,12 @@ export default function LandingPage() {
           <h1 className="text-2xl font-serif font-bold tracking-tight">
             Resume Builder
           </h1>
-          <Button
-            // onClick={() => router.push('/login')}
-            variant="ghost"
+          <Link
+            href="/login"
             className="text-black hover:bg-gray-100"
           >
             Sign In
-          </Button>
+          </Link>
         </div>
       </header>
 
