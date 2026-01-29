@@ -9,21 +9,27 @@ export interface AuthUser {
 export const authUtils = {
   // Get current user from supabase
   async getCurrentUser(): Promise<AuthUser | null> {
-    if(typeof window === 'undefined') return null;
+    if (typeof window === 'undefined') return null;
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if(!user) return null;
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return null;
     return {
       userId: user.id,
       userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
-      email: user.email || ''
-    }
+      email: user.email || '',
+    };
   },
 
   //sign up with email pass
-  async signUp(email: string, password: string, name: string): Promise<{ user: AuthUser | null; error: string | null }> {
+  async signUp(
+    email: string,
+    password: string,
+    name: string
+  ): Promise<{ user: AuthUser | null; error: string | null }> {
     const supabase = createClient();
-    const { data, error} = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -33,7 +39,7 @@ export const authUtils = {
       },
     });
 
-    if(error) {
+    if (error) {
       return { user: null, error: error.message };
     }
 
@@ -42,14 +48,12 @@ export const authUtils = {
     }
 
     //create user record in profiles table
-    const { error: dbError } = await supabase
-      .from('profiles')
-      .insert({
-        id: data.user.id,
-        name: name,
-        email: email,
-      });
-    
+    const { error: dbError } = await supabase.from('profiles').insert({
+      id: data.user.id,
+      name: name,
+      email: email,
+    });
+
     if (dbError) {
       console.error('Error creating user record:', dbError);
     }
@@ -65,7 +69,10 @@ export const authUtils = {
   },
 
   //sign in with email and password
-  async signIn(email: string, password: string): Promise<{ user: AuthUser | null; error: string | null}> {
+  async signIn(
+    email: string,
+    password: string
+  ): Promise<{ user: AuthUser | null; error: string | null }> {
     const supabase = createClient();
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -83,7 +90,10 @@ export const authUtils = {
     return {
       user: {
         userId: data.user.id,
-        userName: data.user.user_metadata?.name || data.user.email?.split('@')[0] || 'User',
+        userName:
+          data.user.user_metadata?.name ||
+          data.user.email?.split('@')[0] ||
+          'User',
         email: data.user.email || '',
       },
       error: null,
@@ -93,7 +103,7 @@ export const authUtils = {
   // Sign in with Google (ready for future implementation)
   async signInWithGoogle(): Promise<{ error: string | null }> {
     const supabase = createClient();
-    
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -122,7 +132,9 @@ export const authUtils = {
   //get supabase session
   async getSession() {
     const supabase = createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     return session;
-  }
-}
+  },
+};

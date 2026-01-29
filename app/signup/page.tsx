@@ -36,7 +36,11 @@ export default function SignupPage() {
 
     setLoading(true);
     try {
-      const { user, error: signUpError } = await authUtils.signUp(email, password, name);
+      const { user, error: signUpError } = await authUtils.signUp(
+        email,
+        password,
+        name
+      );
 
       if (signUpError) {
         setError(signUpError);
@@ -45,7 +49,9 @@ export default function SignupPage() {
 
       if (user) {
         // Show success message
-        alert('Account created successfully! Please check your email to verify your account.');
+        alert(
+          'Account created successfully! Please check your email to verify your account.'
+        );
         router.push('/login');
       }
     } catch (err) {
@@ -59,7 +65,7 @@ export default function SignupPage() {
   const handleGoogleSignIn = async () => {
     setError('');
     setLoading(true);
-    
+
     try {
       const { error: googleError } = await authUtils.signInWithGoogle();
       if (googleError) {
@@ -143,7 +149,9 @@ export default function SignupPage() {
                 required
                 minLength={6}
               />
-              <p className="text-xs text-gray-500">Must be at least 6 characters</p>
+              <p className="text-xs text-gray-500">
+                Must be at least 6 characters
+              </p>
             </div>
 
             {error && (
@@ -167,7 +175,9 @@ export default function SignupPage() {
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              <span className="px-2 bg-white text-gray-500">
+                Or continue with
+              </span>
             </div>
           </div>
 

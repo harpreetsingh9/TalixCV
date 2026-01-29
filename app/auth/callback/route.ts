@@ -13,15 +13,19 @@ export async function GET(request: NextRequest) {
 
     if (!error && data.user) {
       // Create user record in users table if it doesn't exist
-      const { error: dbError } = await supabase
-        .from('users')
-        .upsert({
+      const { error: dbError } = await supabase.from('users').upsert(
+        {
           user_id: data.user.id,
-          name: data.user.user_metadata?.name || data.user.email?.split('@')[0] || 'User',
+          name:
+            data.user.user_metadata?.name ||
+            data.user.email?.split('@')[0] ||
+            'User',
           email: data.user.email || '',
-        }, {
+        },
+        {
           onConflict: 'user_id',
-        });
+        }
+      );
 
       if (dbError) {
         console.error('Error creating user record:', dbError);

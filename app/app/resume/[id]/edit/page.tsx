@@ -50,7 +50,7 @@ export default function ResumePage() {
       a.download = `${resume.personal.fullName?.replace(/\s+/g, '_') || 'resume'}.pdf`;
       document.body.appendChild(a);
       a.click();
-      
+
       // Cleanup
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
@@ -62,16 +62,16 @@ export default function ResumePage() {
 
   useEffect(() => {
     setMounted(true);
-    
+
     const loadData = async () => {
       const currentUser = await authUtils.getCurrentUser();
       setUser(currentUser);
-      
+
       if (id) {
         await loadResume(id);
       }
     };
-    
+
     loadData();
   }, [id]);
 

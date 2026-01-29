@@ -9,10 +9,7 @@ export default function LandingPage() {
           <h1 className="text-2xl font-serif font-bold tracking-tight">
             Resume Builder
           </h1>
-          <Link
-            href="/login"
-            className="text-black hover:bg-gray-100"
-          >
+          <Link href="/login" className="text-black hover:bg-gray-100">
             Sign In
           </Link>
         </div>

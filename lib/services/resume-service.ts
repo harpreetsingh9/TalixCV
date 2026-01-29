@@ -12,10 +12,11 @@ export interface ResumeData {
   // Summary
   summary?: string;
   // Skills
-  skills?: Array<{ 
+  skills?: Array<{
     id: string;
     category: string;
-    skills: Array<{ id: string; name: string; }> }>;
+    skills: Array<{ id: string; name: string }>;
+  }>;
   experience?: Array<{
     id: string;
     company: string;

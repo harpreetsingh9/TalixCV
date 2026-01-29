@@ -1,29 +1,23 @@
 // components/resume/ResumePDF.tsx
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-} from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
   page: {
     padding: 48,
     fontSize: 10,
-    fontFamily: "Times-Roman",
-    color: "#000000",
+    fontFamily: 'Times-Roman',
+    color: '#000000',
   },
   // Header
   header: {
-    textAlign: "center",
+    textAlign: 'center',
     marginBottom: 8,
     paddingBottom: 8,
-    borderBottom: "1px solid #000000",
+    borderBottom: '1px solid #000000',
   },
   name: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 6,
   },
   contactLine: {
@@ -36,11 +30,11 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 11,
-    fontWeight: "bold",
-    textTransform: "uppercase",
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
     marginBottom: 4,
     paddingBottom: 4,
-    borderBottom: "1px solid #000000",
+    borderBottom: '1px solid #000000',
     letterSpacing: 1.5,
   },
   sectionContent: {
@@ -54,10 +48,10 @@ const styles = StyleSheet.create({
   // Skills
   skillGroup: {
     marginBottom: 4,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   skillCategory: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 10,
   },
   skillList: {
@@ -68,26 +62,26 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   experienceHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 3,
   },
   role: {
     fontSize: 10,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   date: {
     fontSize: 10,
-    color: "#505050",
+    color: '#505050',
   },
   company: {
     fontSize: 10,
-    color: "#505050",
+    color: '#505050',
     marginBottom: 3,
   },
   bullet: {
     fontSize: 10,
-    color: "#323232",
+    color: '#323232',
     marginBottom: 2,
     paddingLeft: 12,
     lineHeight: 1.4,
@@ -100,60 +94,60 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   projectHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 3,
   },
   projectTitle: {
     fontSize: 10,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   projectLink: {
     fontSize: 10,
-    color: "#505050",
+    color: '#505050',
   },
   projectDescription: {
     fontSize: 10,
-    color: "#323232",
+    color: '#323232',
     marginBottom: 3,
     lineHeight: 1.4,
   },
   techStack: {
-    flexDirection: "row",
+    flexDirection: 'row',
     fontSize: 10,
   },
   techLabel: {
-    fontWeight: "bold",
-    color: "#505050",
+    fontWeight: 'bold',
+    color: '#505050',
   },
   techList: {
-    color: "#505050",
+    color: '#505050',
   },
   // Education
   educationItem: {
     marginBottom: 6,
   },
   educationHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 3,
   },
   degree: {
     fontSize: 10,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   year: {
     fontSize: 10,
-    color: "#505050",
+    color: '#505050',
   },
   school: {
     fontSize: 10,
-    color: "#505050",
+    color: '#505050',
   },
   // Achievements
   achievementItem: {
     fontSize: 10,
-    color: "#323232",
+    color: '#323232',
     marginBottom: 2,
     paddingLeft: 12,
     lineHeight: 1.4,
@@ -180,23 +174,23 @@ export const ResumePDF = ({ resume }: ResumePDFProps) => {
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.name}>{personal.fullName || "Your Name"}</Text>
-          
+          <Text style={styles.name}>{personal.fullName || 'Your Name'}</Text>
+
           {/* Contact Line 1 */}
           {(personal.email || personal.phone || personal.location) && (
             <Text style={styles.contactLine}>
               {[personal.email, personal.phone, personal.location]
                 .filter(Boolean)
-                .join("    ")}
+                .join('    ')}
             </Text>
           )}
-          
+
           {/* Contact Line 2 */}
           {(personal.linkedIn || personal.portfolio) && (
             <Text style={styles.contactLine}>
               {[personal.linkedIn, personal.portfolio]
                 .filter(Boolean)
-                .join("    ")}
+                .join('    ')}
             </Text>
           )}
         </View>
@@ -220,7 +214,7 @@ export const ResumePDF = ({ resume }: ResumePDFProps) => {
                 <View key={group.id} style={styles.skillGroup}>
                   <Text style={styles.skillCategory}>{group.category}: </Text>
                   <Text style={styles.skillList}>
-                    {group.skills.map((s: any) => s.name).join(", ")}
+                    {group.skills.map((s: any) => s.name).join(', ')}
                   </Text>
                 </View>
               ))}
@@ -239,8 +233,10 @@ export const ResumePDF = ({ resume }: ResumePDFProps) => {
                     <Text style={styles.role}>{exp.role}</Text>
                     <Text style={styles.date}>
                       {exp.startDate && `${exp.startDate}`}
-                      {exp.startDate && (exp.endDate || exp.currentlyWorking) && " – "}
-                      {exp.endDate || (exp.currentlyWorking && "Present")}
+                      {exp.startDate &&
+                        (exp.endDate || exp.currentlyWorking) &&
+                        ' – '}
+                      {exp.endDate || (exp.currentlyWorking && 'Present')}
                     </Text>
                   </View>
                   <Text style={styles.company}>{exp.company}</Text>
@@ -281,7 +277,7 @@ export const ResumePDF = ({ resume }: ResumePDFProps) => {
                     <View style={styles.techStack}>
                       <Text style={styles.techLabel}>Tech: </Text>
                       <Text style={styles.techList}>
-                        {project.technologies.join(", ")}
+                        {project.technologies.join(', ')}
                       </Text>
                     </View>
                   )}
