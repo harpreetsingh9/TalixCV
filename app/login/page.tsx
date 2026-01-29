@@ -24,7 +24,10 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      const { user, error: signInError } = await authUtils.signIn(email, password);
+      const { user, error: signInError } = await authUtils.signIn(
+        email,
+        password
+      );
 
       if (signInError) {
         setError(signInError);
@@ -46,7 +49,7 @@ export default function LoginPage() {
   const handleGoogleSignIn = async () => {
     setError('');
     setLoading(true);
-    
+
     try {
       const { error: googleError } = await authUtils.signInWithGoogle();
       if (googleError) {
@@ -136,7 +139,9 @@ export default function LoginPage() {
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              <span className="px-2 bg-white text-gray-500">
+                Or continue with
+              </span>
             </div>
           </div>
 

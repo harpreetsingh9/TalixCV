@@ -1,5 +1,5 @@
 'use client';
-import { Resume } from "@/types/resume";
+import { Resume } from '@/types/resume';
 interface ResumePreviewProps {
   resume: Resume;
 }

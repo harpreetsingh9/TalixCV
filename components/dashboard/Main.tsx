@@ -18,7 +18,7 @@ export default function Main() {
 
   useEffect(() => {
     setMounted(true);
-    
+
     const loadData = async () => {
       const currentUser = await authUtils.getCurrentUser();
       setUser(currentUser);
